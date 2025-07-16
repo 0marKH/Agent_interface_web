@@ -12,6 +12,12 @@
 </head>
 <body>
   <h1>Conversational Agent</h1>
+
+  <div>
+    <label><input type="radio" name="mode" value="chat" checked> Chat</label>
+    <label><input type="radio" name="mode" value="analyze"> Analyze</label>
+  </div>
+
   <div id="chat"></div>
   <input type="text" id="message" placeholder="Enter message" />
   <button id="send">Send</button>
@@ -27,6 +33,11 @@
     const sendBtn = document.getElementById('send');
     const msgInput = document.getElementById('message');
 
+    function modeValue() {
+      const checked = document.querySelector('input[name="mode"]:checked');
+      return checked ? checked.value : 'chat';
+    }
+
     function addMessage(text, cls) {
       const p = document.createElement('p');
       p.textContent = text;
@@ -39,12 +50,15 @@
       const msg = msgInput.value;
       if (!msg) return;
       addMessage('You: ' + msg, 'msg-user');
+      const params = new URLSearchParams();
+      params.append('message', msg);
+      params.append('mode', modeValue());
       fetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'message=' + encodeURIComponent(msg)
+        body: params.toString()
       }).then(r => r.json()).then(data => {
-        addMessage('Bot: ' + data.response, 'msg-bot');
+        addMessage('Agent: ' + data.response, 'msg-bot');
       });
       msgInput.value = '';
     });

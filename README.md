@@ -1,15 +1,19 @@
 # Agent Interface Web
 
-This project provides a minimal web interface to interact with a simple conversational agent and upload files. The site runs on localhost using only Python's standard library, so no additional packages are required.
+This project serves a small website to chat with a toy conversational agent and optionally upload a CSV file for analysis. The implementation relies only on Python's standard library.
 
 ## Running
 
-Use Python 3 to start the local server:
+Start the server with Python 3:
 
 ```bash
 python3 app.py
 ```
 
-The server listens on [http://localhost:8888](http://localhost:8888). Opening this URL in a browser shows a chat box and a file upload form.
+The site will be available at [http://localhost:8888](http://localhost:8888).
 
-Uploaded files are stored in the `uploads/` directory.
+### Features
+
+- Chat mode: the agent simply echoes your message.
+- Analyze mode: after uploading a CSV file, the agent reports how many lines are in the file.
+- Uploaded files are saved to the `uploads/` directory.
