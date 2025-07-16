@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Conversational Agent</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    #chat { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; }
+    .msg-user { color: blue; }
+    .msg-bot { color: green; }
+  </style>
+</head>
+<body>
+  <h1>Conversational Agent</h1>
+  <div id="chat"></div>
+  <input type="text" id="message" placeholder="Enter message" />
+  <button id="send">Send</button>
+
+  <h2>Upload File</h2>
+  <form id="uploadForm" enctype="multipart/form-data" method="post" action="/upload">
+     <input type="file" name="file" />
+     <input type="submit" value="Upload" />
+  </form>
+
+  <script>
+    const chatDiv = document.getElementById('chat');
+    const sendBtn = document.getElementById('send');
+    const msgInput = document.getElementById('message');
+
+    function addMessage(text, cls) {
+      const p = document.createElement('p');
+      p.textContent = text;
+      p.className = cls;
+      chatDiv.appendChild(p);
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    sendBtn.addEventListener('click', () => {
+      const msg = msgInput.value;
+      if (!msg) return;
+      addMessage('You: ' + msg, 'msg-user');
+      fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'message=' + encodeURIComponent(msg)
+      }).then(r => r.json()).then(data => {
+        addMessage('Bot: ' + data.response, 'msg-bot');
+      });
+      msgInput.value = '';
+    });
+  </script>
+</body>
+</html>
